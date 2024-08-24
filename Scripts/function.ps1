@@ -29,15 +29,18 @@ function New-Sharedpassword {
         $length = 12,
         $expireviews = 30,
         $expiredays = 14,
-        $pwpushurl = "https://pw.yesit.com.au/"
+        $pwpushurl = "https://pw.yesit.com.au/",
+        $password = $null
     )
 
-    $password = ""
-    while ($password.Length -le $length) {
-        $passwordraw = Invoke-WebRequest "https://www.dinopass.com/password/strong"
-        $password = $passwordraw.Content
+    #if password is null generate one from DinoPass, otherwise continue with supplied password
+    if ($password = $null){
+        $password = ""
+        while ($password.Length -le $length) {
+            $passwordraw = Invoke-WebRequest "https://www.dinopass.com/password/strong"
+            $password = $passwordraw.Content
+        }
     }
-
 
     $headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
     $headers.Add("Content-Type", "application/json")
